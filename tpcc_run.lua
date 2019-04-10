@@ -103,7 +103,7 @@ function new_order()
   d_next_o_id, d_tax = con:query_row(([[SELECT d_next_o_id, d_tax 
                                           FROM district%d 
                                          WHERE d_w_id = %d 
-                                           AND d_id = %d FOR UPDATE]]):
+                                           AND d_id = %d]]):
                                         format(table_num, w_id, d_id))
 
 -- UPDATE district SET d_next_o_id = :d_next_o_id + 1
@@ -177,7 +177,7 @@ function new_order()
 
 	s_quantity, s_data, ol_dist_info = con:query_row(([[SELECT s_quantity, s_data, s_dist_%s s_dist 
 	                                                      FROM stock%d  
-	                                                     WHERE s_i_id = %d AND s_w_id= %d FOR UPDATE]]):
+	                                                     WHERE s_i_id = %d AND s_w_id= %d]]):
 	                                                     format(string.format("%02d",d_id),table_num,ol_i_id,ol_supply_w_id ))
      
         s_quantity=tonumber(s_quantity)
@@ -347,7 +347,7 @@ function payment()
 			    FROM customer%d
 			   WHERE c_w_id = %d 
 			     AND c_d_id= %d
-			     AND c_id=%d FOR UPDATE]])
+			     AND c_id=%d]])
 			 :format(table_num, w_id, c_d_id, c_id ))
 
   c_balance = tonumber(c_balance) - h_amount
@@ -569,7 +569,7 @@ function delivery()
                                      FROM new_orders%d 
                                     WHERE no_d_id = %d 
                                       AND no_w_id = %d 
-                                      ORDER BY no_o_id ASC LIMIT 1 FOR UPDATE]])
+                                      ORDER BY no_o_id ASC LIMIT 1]])
                                    :format(table_num, d_id, w_id))
 
         if (rs.nrows > 0) then
