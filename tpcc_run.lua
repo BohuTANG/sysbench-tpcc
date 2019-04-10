@@ -687,7 +687,7 @@ function stocklevel()
      WHERE ol_w_id=:w_id AND ol_d_id=:d_id AND ol_o_id<:o_id AND  ol_o_id>=:o_id-20 AND s_w_id=:w_id AND s_i_id=ol_i_id AND s_quantity < :threshold;
 --]]
 
-    rs = con:query(([[SELECT COUNT(DISTINCT (s.s_i_id))
+    rs = con:query(([[SELECT (s.s_i_id)
                         FROM order_line%d as o, stock%d as s
                        WHERE o.ol_w_id = %d
                          AND o.ol_d_id = %d
