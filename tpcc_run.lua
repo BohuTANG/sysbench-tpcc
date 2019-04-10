@@ -84,12 +84,12 @@ function new_order()
   local c_credit
   local w_tax
 
-  c_discount, c_last, c_credit, w_tax = con:query_row(([[SELECT c_discount, c_last, c_credit, w_tax 
-                                                           FROM customer%d, warehouse%d
-                                                          WHERE w_id = %d 
-                                                            AND c_w_id = w_id 
-                                                            AND c_d_id = %d 
-                                                            AND c_id = %d]]):
+  c_discount, c_last, c_credit, w_tax = con:query_row(([[SELECT c.c_discount, c.c_last, c.c_credit, w.w_tax, w.w_id, c.c_w_id, c.c_d_id, c.c_id
+                                                           FROM customer%d as c, warehouse%d as w
+                                                          WHERE w.w_id = %d
+                                                            AND c.c_w_id = w.w_id
+                                                            AND c.c_d_id = %d
+                                                            AND c.c_id = %d]]):
                                                          format(table_num, table_num, w_id, d_id, c_id))
 
 --        SELECT d_next_o_id, d_tax INTO :d_next_o_id, :d_tax
@@ -314,7 +314,7 @@ function payment()
 		namecnt = namecnt + 1
 	end
 
-	rs = con:query(([[SELECT c_id
+	rs = con:query(([[SELECT c_id, c_first
 		 	    FROM customer%d
 			   WHERE c_w_id = %d AND c_d_id= %d
                              AND c_last='%s' ORDER BY c_first]]
@@ -687,15 +687,15 @@ function stocklevel()
      WHERE ol_w_id=:w_id AND ol_d_id=:d_id AND ol_o_id<:o_id AND  ol_o_id>=:o_id-20 AND s_w_id=:w_id AND s_i_id=ol_i_id AND s_quantity < :threshold;
 --]]
 
-    rs = con:query(([[SELECT COUNT(DISTINCT (s_i_id))
-                        FROM order_line%d, stock%d
-                       WHERE ol_w_id = %d 
-                         AND ol_d_id = %d
-                         AND ol_o_id < %d 
-                         AND ol_o_id >= %d
-                         AND s_w_id= %d
-                         AND s_i_id=ol_i_id 
-                         AND s_quantity < %d ]])
+    rs = con:query(([[SELECT COUNT(DISTINCT (s.s_i_id))
+                        FROM order_line%d as o, stock%d as s
+                       WHERE o.ol_w_id = %d
+                         AND o.ol_d_id = %d
+                         AND o.ol_o_id < %d
+                         AND o.ol_o_id >= %d
+                         AND s.s_w_id= %d
+                         AND s.s_i_id=o.ol_i_id
+                         AND s.s_quantity < %d ]])
 		:format(table_num, table_num, w_id, d_id, d_next_o_id, d_next_o_id - 20, w_id, level ))
 
 

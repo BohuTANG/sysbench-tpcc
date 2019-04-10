@@ -147,7 +147,7 @@ function create_tables(drv, con, table_num)
 	w_tax decimal(4,2), 
 	w_ytd decimal(12,2),
 	primary key (w_id) 
-	) %s %s]],
+	) %s %s partition by hash(w_id)]],
         table_num, engine_def, extra_table_options)
 
    con:query(query)
@@ -166,7 +166,7 @@ function create_tables(drv, con, table_num)
 	d_ytd decimal(12,2), 
 	d_next_o_id int,
 	primary key (d_w_id, d_id) 
-	) %s %s]],
+	) %s %s partition by hash(d_id)]],
       table_num, engine_def, extra_table_options)
 
     con:query(query)
@@ -197,7 +197,7 @@ function create_tables(drv, con, table_num)
 	c_delivery_cnt smallint, 
 	c_data text,
 	PRIMARY KEY(c_w_id, c_d_id, c_id)
-	) %s %s]],
+	) %s %s partition by hash(c_id)]],
       table_num, engine_def, extra_table_options)
 
    con:query(query)
@@ -220,7 +220,7 @@ function create_tables(drv, con, table_num)
 	h_date ]] .. datetime_type .. [[,
 	h_amount decimal(6,2), 
 	h_data varchar(24) %s
-	) %s %s]],
+	) %s %s partition by hash(h_c_id)]],
       table_num, hist_auto_inc, hist_pk, engine_def, extra_table_options)
 
    con:query(query)
@@ -236,7 +236,7 @@ function create_tables(drv, con, table_num)
 	o_ol_cnt ]] .. tinyint_type .. [[, 
 	o_all_local ]] .. tinyint_type .. [[,
 	PRIMARY KEY(o_w_id, o_d_id, o_id) 
-	) %s %s]],
+	) %s %s partition by hash(o_id)]],
       table_num, engine_def, extra_table_options)
 
    con:query(query)
@@ -249,7 +249,7 @@ function create_tables(drv, con, table_num)
 	no_d_id ]] .. tinyint_type .. [[ not null,
 	no_w_id smallint not null,
 	PRIMARY KEY(no_w_id, no_d_id, no_o_id)
-	) %s %s]],
+	) %s %s partition by hash(no_o_id)]],
       table_num, engine_def, extra_table_options)
 
    con:query(query)
@@ -267,7 +267,7 @@ function create_tables(drv, con, table_num)
 	ol_amount decimal(6,2), 
 	ol_dist_info char(24),
 	PRIMARY KEY(ol_w_id, ol_d_id, ol_o_id, ol_number)
-	) %s %s]],
+	) %s %s partition by hash(ol_o_id)]],
       table_num, engine_def, extra_table_options)
 
    con:query(query)
@@ -294,7 +294,7 @@ function create_tables(drv, con, table_num)
 	s_remote_cnt smallint,
 	s_data varchar(50),
 	PRIMARY KEY(s_w_id, s_i_id)
-	) %s %s]],
+	) %s %s partition by hash(s_i_id)]],
       table_num, engine_def, extra_table_options)
 
    con:query(query)
@@ -309,7 +309,7 @@ function create_tables(drv, con, table_num)
 	i_price decimal(5,2), 
 	i_data varchar(50),
 	PRIMARY KEY(i_id) 
-	) %s %s]],
+	) %s %s partition by hash(i_id)]],
       i, engine_def, extra_table_options)
 
    con:query(query)
