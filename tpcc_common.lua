@@ -542,7 +542,16 @@ function load_tables(drv, con, warehouse_num)
    end 
    con:bulk_insert_done()
 
-   con:query(string.format("INSERT INTO new_orders%d (no_o_id, no_d_id, no_w_id) SELECT o_id, o_d_id, o_w_id FROM orders%d WHERE o_id>2100 and o_w_id=%d", table_num, table_num, warehouse_num))
+   -- con:query(string.format("INSERT INTO new_orders%d (no_o_id, no_d_id, no_w_id) SELECT o_id, o_d_id, o_w_id FROM orders%d WHERE o_id>2100 and o_w_id=%d", table_num, table_num, warehouse_num))
+
+   rs = con:query(string.format("SELECT o_id, o_d_id, o_w_id FROM orders%d WHERE o_id>2100 and o_w_id=%d",  table_num, warehouse_num))
+   for i = 1,  rs.nrows do
+       row = rs:fetch_row()
+       local o_id = row[1]
+       local o_d_id = row[2]
+       local o_w_id = row[3]
+       con:query(string.format("INSERT INTO new_orders%d (no_o_id, no_d_id, no_w_id) values(%d, %d, %d)", table_num, o_id, o_d_id, o_w_id))
+   end
 
    con:bulk_insert_init("INSERT INTO order_line" .. table_num .. [[
 	  (ol_o_id, ol_d_id, ol_w_id, ol_number, ol_i_id, ol_supply_w_id, ol_delivery_d, 
